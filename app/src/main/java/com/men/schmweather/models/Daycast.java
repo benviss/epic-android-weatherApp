@@ -1,9 +1,11 @@
 package com.men.schmweather.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Guest on 11/29/16.
  */
-public class Daycast {
+public class Daycast implements Serializable{
     public String getDate() {
         return date;
     }
@@ -124,14 +126,6 @@ public class Daycast {
         this.windDeg = windDeg;
     }
 
-    public String getRain() {
-        return rain;
-    }
-
-    public void setRain(String rain) {
-        this.rain = rain;
-    }
-
     private String date;
     private String temp;
     private String temp_min;
@@ -147,10 +141,9 @@ public class Daycast {
     private String clouds;
     private String windSpeed;
     private String windDeg;
-    private String rain;
 
 
-    public Daycast(String date, String temp, String temp_min, String temp_max, String pressure, String sea_level, String grnd_level, String humidity, String temp_kf, String weatherMain, String weatherDescription, String weatherIcon, String clouds, String windSpeed, String windDeg, String rain) {
+    public Daycast(String date, String temp, String temp_min, String temp_max, String pressure, String sea_level, String grnd_level, String humidity, String temp_kf, String weatherMain, String weatherDescription, String weatherIcon, String clouds, String windSpeed, String windDeg) {
         this.date = date;
         this.temp = temp;
         this.temp_min = temp_min;
@@ -166,7 +159,6 @@ public class Daycast {
         this.clouds = clouds;
         this.windSpeed = windSpeed;
         this.windDeg = windDeg;
-        this.rain = rain;
     }
 
 

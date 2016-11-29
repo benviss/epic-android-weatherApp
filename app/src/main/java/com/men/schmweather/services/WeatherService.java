@@ -36,31 +36,53 @@ public class WeatherService {
         Request request= new Request.Builder()
             .url(url)
             .build();
-        Log.d("test", request.toString());
         Call call = client.newCall(request);
         call.enqueue(callback);
     }
 
-    public Weather processResults(Response response) {
+    public ArrayList<Weather> processResults(Response response) {
         ArrayList<Daycast> daycasts = new ArrayList<>();
-        Weather weather;
-
+        ArrayList<Weather> weathers = new ArrayList<>();
         try {
             String jsonData = response.body().string();
             if(response.isSuccessful()) {
                 JSONObject weatherJSON = new JSONObject(jsonData);
                 String city = weatherJSON.getJSONObject("city").getString("name");
-                JSONObject daycastJSON = weatherJSON.getJSONObject("list");
+                String country = weatherJSON.getJSONObject("city").getString("country");
+                JSONArray daycastJSON = weatherJSON.getJSONArray("list");
                 for (int i = 0; i < daycastJSON.length(); i++) {
-
+                    JSONObject dayJSON = daycastJSON.getJSONObject(i);
+                    String date = Integer.toString(dayJSON.getInt("dt"));
+                    JSONObject mainJSON = dayJSON.getJSONObject("main");
+                    String temp = mainJSON.getString("temp");
+                    String tempMin = mainJSON.getString("temp_min");
+                    String tempMax = mainJSON.getString("temp_max");
+                    String pressure = mainJSON.getString("pressure");
+                    String seaLevel = mainJSON.getString("sea_level");
+                    String grndLevel = mainJSON.getString("grnd_level");
+                    String humidity = mainJSON.getString("humidity");
+                    String tempKf = mainJSON.getString("temp_kf");
+                    JSONObject weatherDetailJSON = dayJSON.getJSONArray("weather").getJSONObject(0);
+                    String weatherMain = weatherDetailJSON.getString("main");
+                    String weatherDescription= weatherDetailJSON.getString("description");
+                    String weatherIcon = weatherDetailJSON.getString("icon");
+                    JSONObject cloudsJSON = dayJSON.getJSONObject("clouds");
+                    String clouds = cloudsJSON.getString("all");
+                    JSONObject windJSON = dayJSON.getJSONObject("wind");
+                    String windSpeed = windJSON.getString("speed");
+                    String windDeg = windJSON.getString("deg");
+                    Daycast newDay = new Daycast(date, temp, tempMin, tempMax, pressure, seaLevel, grndLevel, humidity, tempKf, weatherMain, weatherDescription, weatherIcon, clouds, windSpeed, windDeg);
+                    daycasts.add(newDay);
                 }
+                Weather weather = new Weather(city, country, daycasts);
+                weathers.add(weather);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return weather;
+        return weathers;
     }
 
 
